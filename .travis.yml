@@ -29,7 +29,7 @@ matrix:
 #TravisCI seems to be coming in on undocumented IP addresses.
 #  - dig +short myip.opendns.com @resolver1.opendns.com
       - docker build -t ${DOCKER_REPO} .
-      - TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+      - TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "1.0"; else echo $TRAVIS_BRANCH ; fi`
         COMMIT=${TRAVIS_COMMIT::8}
       after_success:
       # - echo aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login -u $DOCKER_USERNAME --password-stdin $IMAGE_REPO_URL
