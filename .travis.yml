@@ -29,13 +29,23 @@ matrix:
 #TravisCI seems to be coming in on undocumented IP addresses.
 #  - dig +short myip.opendns.com @resolver1.opendns.com
       - docker build -t ${DOCKER_REPO} .
-      - TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "1.0"; else echo $TRAVIS_BRANCH ; fi`
-        COMMIT=${TRAVIS_COMMIT::8}
+      - TARGET_IMAGE="${IMAGE_REPO_URL}/${DOCKER_REPO}"
+      - TARGET_IMAGE_LATEST="${TARGET_IMAGE}:latest"
+      - TIMESTAMP=$(date '+%Y%m%d%H%M%S')
+      - VERSION="${TIMESTAMP}-${TRAVIS_COMMIT}"
+      - TARGET_IMAGE_VERSIONED="${TARGET_IMAGE}:${VERSION}"
+      # - TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+      #   COMMIT=${TRAVIS_COMMIT::8}
       after_success:
       # - echo aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login -u $DOCKER_USERNAME --password-stdin $IMAGE_REPO_URL
       - eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - docker tag $DOCKER_REPO:$TAG $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
-      - docker push $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
+      # - docker tag $DOCKER_REPO:$TAG $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
+      - docker tag ${SOURCE_IMAGE} ${TARGET_IMAGE_LATEST}
+      # - docker push $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
+      - docker push ${TARGET_IMAGE_LATEST}
+
+      - docker tag ${SOURCE_IMAGE} ${TARGET_IMAGE_VERSIONED}
+      - docker push ${TARGET_IMAGE_VERSIONED}
 # - echo "${SSH_KEY}" |  base64 --decode > /tmp/ssh_rsa
 # - chmod 600 /tmp/ssh_rsa
 # - ssh -o "StrictHostKeyChecking no" pi@${IPADDR} -i /tmp/ssh_rsa "echo test > test.log"
