@@ -28,7 +28,7 @@ matrix:
       script:
 #TravisCI seems to be coming in on undocumented IP addresses.
 #  - dig +short myip.opendns.com @resolver1.opendns.com
-      - docker image build -t ${DOCKER_REPO} .
+      - docker build -t ${DOCKER_REPO} .
 
       after_success:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login -u $DOCKER_USERNAME --password-stdin $IMAGE_REPO_URL
