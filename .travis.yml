@@ -32,8 +32,8 @@ matrix:
       - TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
         COMMIT=${TRAVIS_COMMIT::8}
       after_success:
-      # - echo aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login -u $DOCKER_USERNAME --password-stdin $IMAGE_REPO_URL
-      - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
+      - echo aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login -u $DOCKER_USERNAME --password-stdin $IMAGE_REPO_URL
+      # - eval $(aws ecr get-login --region $AWS_DEFAULT_REGION)
       - docker tag $DOCKER_REPO:$TAG $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
       - docker push $IMAGE_REPO_URL/$DOCKER_REPO:$TAG
 # - echo "${SSH_KEY}" |  base64 --decode > /tmp/ssh_rsa
